@@ -22,7 +22,7 @@ export const BACKGROUNDS = {
   // dashboard top streep banner.
   // dashboardHero: '/images/club-crowd-blue.jpg',
   dashboardHero: '/images/dashboard-image.jpg',
-  dashboardHero: '/images/h2.jpg',
+  dashboardHero: '/images/h3.jpg',
 
   // Banner strip at the top of the Social Feed page.
   socialHero: '/images/club-crowd-purple.jpg',
