@@ -11,7 +11,7 @@ export function DialogContent({ className, children, ...props }) {
       <RadixDialog.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm" />
       <RadixDialog.Content
         className={cn(
-          'fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-lg border border-zinc-800 bg-surface p-6 shadow-glow max-h-[85vh] overflow-y-auto data-[state=open]:animate-dialog-in',
+          'fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-lg border border-zinc-800 bg-surface p-6 shadow-glow max-h-[85vh] overflow-y-auto scrollbar-club data-[state=open]:animate-dialog-in',
           className,
         )}
         {...props}

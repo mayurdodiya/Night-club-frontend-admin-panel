@@ -9,16 +9,19 @@ import {
   ArrowUpDown,
   X,
   Sparkles,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Pagination } from '@/components/shared/Pagination'
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog'
-import { Avatar, AvatarStack } from '@/components/shared/Avatar'
+import { Avatar } from '@/components/shared/Avatar'
 import { useSocialFeed } from '@/hooks/useSocialFeed'
 import { cn } from '@/lib/utils'
 import { BACKGROUNDS, bgImage } from '@/lib/backgrounds'
@@ -78,7 +81,10 @@ function PostImageSlider({ imageUrls = [] }) {
               key={index}
               type="button"
               aria-label={`Show image ${index + 1}`}
-              onClick={() => setActiveIndex(index)}
+              onClick={(event) => {
+                event.stopPropagation()
+                setActiveIndex(index)
+              }}
               className={cn(
                 'h-1.5 rounded-full transition-all duration-200',
                 index === activeIndex ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80',
@@ -97,6 +103,8 @@ export default function SocialFeed() {
   const { posts, total, loading, deletePost, loadComments, loadLikes } = useSocialFeed(page, limit)
 
   const [confirmId, setConfirmId] = useState(null)
+  const [selectedPost, setSelectedPost] = useState(null)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
   // One expandable panel at a time: { id, tab: 'likes' | 'comments' }
   const [panel, setPanel] = useState(null)
@@ -258,13 +266,23 @@ export default function SocialFeed() {
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5">
           {visible.map((post) => {
             const id = post.id || post._id
-            const isLikesOpen = panel?.id === id && panel?.tab === 'likes'
-            const isCommentsOpen = panel?.id === id && panel?.tab === 'comments'
 
             return (
-              <Card key={id} className="overflow-hidden bg-surface/80 backdrop-blur-sm hover:translate-y-0">
+              <Card
+                key={id}
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  setSelectedPost(post)
+                  setSelectedImageIndex(0)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') setSelectedPost(post)
+                }}
+                className="group flex h-full cursor-pointer flex-col overflow-hidden border-zinc-800/90 bg-surface/85 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-fuchsia-400/40"
+              >
                 {post.imageUrls?.length ? <PostImageSlider imageUrls={post.imageUrls} /> : null}
-                <CardContent className="space-y-3 p-3 sm:p-4">
+                <CardContent className="flex flex-1 flex-col gap-3 p-3 sm:p-4">
                   {/* Author row */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
@@ -284,7 +302,10 @@ export default function SocialFeed() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => setConfirmId(id)}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        setConfirmId(id)
+                      }}
                       aria-label="Delete post"
                       className="shrink-0 hover:bg-red-500/10"
                     >
@@ -293,101 +314,25 @@ export default function SocialFeed() {
                   </div>
 
                   {post.description ? (
-                    <div className="rounded-lg border border-zinc-800/80 bg-elevated/35 px-3 py-2">
-                      <p className="text-sm leading-relaxed text-zinc-300">{post.description}</p>
+                    <div className="min-h-14 rounded-lg border border-fuchsia-400/10 bg-elevated/35 px-3 py-2">
+                      <p className="line-clamp-2 text-sm leading-relaxed text-zinc-300">{post.description}</p>
                     </div>
                   ) : null}
 
                   {/* Engagement bar */}
-                  <div className="flex flex-wrap items-center justify-end gap-2 border-t border-zinc-800/80 pt-3">
-                    <button
-                      type="button"
-                      onClick={() => openPanel(id, 'likes')}
-                      className={cn(
-                        'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm transition-all duration-200',
-                        isLikesOpen
-                          ? 'bg-rose-500/15 text-rose-300'
-                          : 'text-muted hover:bg-elevated/60 hover:text-rose-300',
-                      )}
-                    >
-                      <Heart size={15} className={cn(isLikesOpen && 'fill-rose-400 text-rose-400')} />
+                  <div className="mt-auto flex flex-wrap items-center justify-end gap-2 border-t border-zinc-800/80 pt-3">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-sm text-muted">
+                      <Heart size={15} />
                       <span className="font-medium">{post.likeCount ?? 0}</span>
                       <span className="text-xs">likes</span>
-                    </button>
+                    </span>
 
-                    <button
-                      type="button"
-                      onClick={() => openPanel(id, 'comments')}
-                      className={cn(
-                        'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm transition-all duration-200',
-                        isCommentsOpen
-                          ? 'bg-blue-500/15 text-blue-300'
-                          : 'text-muted hover:bg-elevated/60 hover:text-blue-300',
-                      )}
-                    >
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-sm text-muted">
                       <MessageCircle size={15} />
                       <span className="font-medium">{post.commentCount ?? 0}</span>
                       <span className="text-xs">comments</span>
-                    </button>
-
-                    {/* Preview of who liked, once loaded */}
-                    {peopleCache[`${id}:likes`]?.length ? (
-                      <div className="ml-auto flex items-center gap-2">
-                        <AvatarStack people={peopleCache[`${id}:likes`]} max={4} />
-                      </div>
-                    ) : null}
+                    </span>
                   </div>
-
-                  {/* Expandable panel */}
-                  {isLikesOpen || isCommentsOpen ? (
-                    <div className="rounded-lg border border-zinc-800 bg-elevated/60 p-3">
-                      <p className="mb-2 text-xs font-medium uppercase tracking-wider text-zinc-500">
-                        {isLikesOpen ? 'Liked by' : 'Comments'}
-                      </p>
-
-                      {panelLoading && !panelData ? (
-                        <div className="space-y-2">
-                          <Skeleton className="h-8 w-full" />
-                          <Skeleton className="h-8 w-2/3" />
-                        </div>
-                      ) : !panelData || panelData.length === 0 ? (
-                        <p className="text-sm text-muted">
-                          {isLikesOpen ? 'No likes on this post yet.' : 'No comments on this post yet.'}
-                        </p>
-                      ) : isLikesOpen ? (
-                        <ul className="flex flex-wrap gap-2">
-                          {panelData.map((u, i) => (
-                            <li
-                              key={u.id || u._id || i}
-                              className="flex items-center gap-2 rounded-full border border-zinc-800 bg-surface/80 py-1 pl-1 pr-3"
-                            >
-                              <Avatar name={u.name || u.user?.name || 'User'} src={u.avatar} size="xs" />
-                              <span className="text-xs text-zinc-200">{u.name || u.user?.name || 'User'}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <ul className="space-y-3">
-                          {panelData.map((c, i) => (
-                            <li key={c.id || c._id || i} className="flex gap-2.5">
-                              <Avatar name={c.user?.name || 'User'} src={c.user?.avatar} size="sm" />
-                              <div className="min-w-0 flex-1 rounded-lg bg-surface/80 px-3 py-2">
-                                <div className="flex flex-wrap items-baseline gap-2">
-                                  <span className="text-sm font-medium text-zinc-100">
-                                    {c.user?.name || 'User'}
-                                  </span>
-                                  {relativeTime(c.createdAt) ? (
-                                    <span className="text-[11px] text-zinc-500">{relativeTime(c.createdAt)}</span>
-                                  ) : null}
-                                </div>
-                                <p className="mt-0.5 text-sm text-zinc-300">{c.description}</p>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ) : null}
                 </CardContent>
               </Card>
             )
@@ -398,6 +343,127 @@ export default function SocialFeed() {
       <div className="mt-4 rounded-lg border border-zinc-800 bg-surface/70 backdrop-blur-sm">
         <Pagination page={page} limit={limit} total={total} onPageChange={setPage} />
       </div>
+
+      <Dialog open={!!selectedPost} onOpenChange={(open) => !open && setSelectedPost(null)}>
+        <DialogContent className="max-w-xl border-fuchsia-500/25 bg-[linear-gradient(145deg,rgba(35,25,48,0.98),rgba(14,14,22,0.98))] p-0 shadow-[0_0_45px_rgba(168,85,247,0.25)]">
+          {selectedPost ? (
+            <>
+              {selectedPost.imageUrls?.length ? (
+                <div className="relative">
+                  <img
+                    src={selectedPost.imageUrls[selectedImageIndex]}
+                    alt="Post media"
+                    className="max-h-[48vh] w-full rounded-t-lg object-cover"
+                  />
+                  {selectedPost.imageUrls.length > 1 ? (
+                    <>
+                      <button
+                        type="button"
+                        aria-label="Previous image"
+                        onClick={() => setSelectedImageIndex((index) => (index - 1 + selectedPost.imageUrls.length) % selectedPost.imageUrls.length)}
+                        className="absolute left-3 top-1/2 rounded-full bg-black/55 p-1.5 text-white transition-colors hover:bg-fuchsia-600"
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Next image"
+                        onClick={() => setSelectedImageIndex((index) => (index + 1) % selectedPost.imageUrls.length)}
+                        className="absolute right-3 top-1/2 rounded-full bg-black/55 p-1.5 text-white transition-colors hover:bg-fuchsia-600"
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                      <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-1.5">
+                        {selectedPost.imageUrls.map((_, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            aria-label={`Show popup image ${index + 1}`}
+                            onClick={() => setSelectedImageIndex(index)}
+                            className={cn(
+                              'h-1.5 rounded-full transition-all duration-200',
+                              index === selectedImageIndex ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80',
+                            )}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+              ) : null}
+              <div className="p-5">
+                <DialogHeader>
+                  <DialogTitle>{selectedPost.user?.name || 'Unknown user'}'s post</DialogTitle>
+                </DialogHeader>
+                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted">
+                  {relativeTime(selectedPost.createdAt) ? <span>{relativeTime(selectedPost.createdAt)}</span> : null}
+                  {selectedPost.venue ? (
+                    <Badge className="gap-1 bg-elevated/80 text-zinc-300">
+                      <MapPin size={11} /> {selectedPost.venue}
+                    </Badge>
+                  ) : null}
+                </div>
+                <p className="rounded-lg border border-fuchsia-400/10 bg-black/20 p-3 text-sm leading-relaxed text-zinc-200">
+                  {selectedPost.description || 'No description available.'}
+                </p>
+                <div className="mt-4 flex justify-end gap-2 text-sm text-muted">
+                  <button
+                    type="button"
+                    onClick={() => openPanel(selectedPost.id || selectedPost._id, 'likes')}
+                    className={cn(
+                      'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors hover:bg-rose-500/10 hover:text-rose-300',
+                      panel?.id === (selectedPost.id || selectedPost._id) && panel?.tab === 'likes' && 'bg-rose-500/15 text-rose-300',
+                    )}
+                  >
+                    <Heart size={15} /> {selectedPost.likeCount ?? 0} likes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openPanel(selectedPost.id || selectedPost._id, 'comments')}
+                    className={cn(
+                      'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors hover:bg-blue-500/10 hover:text-blue-300',
+                      panel?.id === (selectedPost.id || selectedPost._id) && panel?.tab === 'comments' && 'bg-blue-500/15 text-blue-300',
+                    )}
+                  >
+                    <MessageCircle size={15} /> {selectedPost.commentCount ?? 0} comments
+                  </button>
+                </div>
+                {panel?.id === (selectedPost.id || selectedPost._id) ? (
+                  <div className="mt-3 rounded-lg border border-zinc-800 bg-black/20 p-3">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wider text-zinc-500">
+                      {panel.tab === 'likes' ? 'Liked by' : 'Comments'}
+                    </p>
+                    {panelLoading ? (
+                      <p className="text-sm text-muted">Loading details...</p>
+                    ) : !panelData?.length ? (
+                      <p className="text-sm text-muted">
+                        {panel.tab === 'likes' ? 'No likes on this post yet.' : 'No comments on this post yet.'}
+                      </p>
+                    ) : panel.tab === 'likes' ? (
+                      <div className="flex flex-wrap gap-2">
+                        {panelData.map((person, index) => (
+                          <span key={person.id || person._id || index} className="rounded-full bg-elevated px-2.5 py-1 text-xs text-zinc-200">
+                            {person.name || person.user?.name || 'User'}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {panelData.map((comment, index) => (
+                          <div key={comment.id || comment._id || index} className="rounded-md bg-elevated/70 px-3 py-2">
+                            <p className="text-xs font-medium text-zinc-200">{comment.user?.name || 'User'}</p>
+                            <p className="mt-0.5 text-sm text-zinc-300">{comment.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            </>
+          ) : null}
+        </DialogContent>
+      </Dialog>
 
       <ConfirmDialog
         open={!!confirmId}

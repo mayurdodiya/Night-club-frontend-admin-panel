@@ -35,4 +35,26 @@
   .text-muted {
     @apply text-zinc-400;
   }
+
+  .scrollbar-club {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(168 85 247 / 0.8) rgb(24 18 32 / 0.8);
+  }
+
+  .scrollbar-club::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .scrollbar-club::-webkit-scrollbar-track {
+    background: rgb(24 18 32 / 0.8);
+  }
+
+  .scrollbar-club::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgb(217 70 239), rgb(59 130 246));
+  }
+
+  .scrollbar-club::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgb(232 121 249), rgb(96 165 250));
+  }
 }
