@@ -58,6 +58,39 @@ function StatTile({ icon: Icon, label, value, accent }) {
   )
 }
 
+function PostImageSlider({ imageUrls = [] }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  if (!imageUrls.length) return null
+
+  return (
+    <div className="relative overflow-hidden border-b border-zinc-800/80 bg-black/20">
+      <img
+        src={imageUrls[activeIndex]}
+        alt="Post media"
+        loading="lazy"
+        className="h-44 w-full object-cover sm:h-52"
+      />
+      {imageUrls.length > 1 ? (
+        <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-1.5">
+          {imageUrls.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              aria-label={`Show image ${index + 1}`}
+              onClick={() => setActiveIndex(index)}
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-200',
+                index === activeIndex ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80',
+              )}
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 export default function SocialFeed() {
   const [page, setPage] = useState(1)
   const limit = 10
@@ -222,7 +255,7 @@ export default function SocialFeed() {
       ) : visible.length === 0 ? (
         <EmptyState message="No posts match these filters." />
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5">
           {visible.map((post) => {
             const id = post.id || post._id
             const isLikesOpen = panel?.id === id && panel?.tab === 'likes'
@@ -230,7 +263,8 @@ export default function SocialFeed() {
 
             return (
               <Card key={id} className="overflow-hidden bg-surface/80 backdrop-blur-sm hover:translate-y-0">
-                <CardContent className="space-y-3">
+                {post.imageUrls?.length ? <PostImageSlider imageUrls={post.imageUrls} /> : null}
+                <CardContent className="space-y-3 p-3 sm:p-4">
                   {/* Author row */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
@@ -259,25 +293,13 @@ export default function SocialFeed() {
                   </div>
 
                   {post.description ? (
-                    <p className="text-sm leading-relaxed text-zinc-300">{post.description}</p>
-                  ) : null}
-
-                  {post.imageUrls?.length ? (
-                    <div className="flex flex-wrap gap-2">
-                      {post.imageUrls.map((url) => (
-                        <img
-                          key={url}
-                          src={url}
-                          alt=""
-                          loading="lazy"
-                          className="h-24 w-24 rounded-lg border border-zinc-800 object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                      ))}
+                    <div className="rounded-lg border border-zinc-800/80 bg-elevated/35 px-3 py-2">
+                      <p className="text-sm leading-relaxed text-zinc-300">{post.description}</p>
                     </div>
                   ) : null}
 
                   {/* Engagement bar */}
-                  <div className="flex flex-wrap items-center gap-2 border-t border-zinc-800/80 pt-3">
+                  <div className="flex flex-wrap items-center justify-end gap-2 border-t border-zinc-800/80 pt-3">
                     <button
                       type="button"
                       onClick={() => openPanel(id, 'likes')}
