@@ -4,7 +4,9 @@ const PARTICLES = Array.from({ length: 24 }, (_, i) => i)
 
 const PHOTOS = {
   full: '/images/party-crowd-hero.jpg',
-  ambient: '/images/club-crowd-blue.jpg',
+  ambient: '/images/image-2.jpg',
+  // ambient: '/images/club-crowd-blue.jpg',
+  // ambient: '/images/bg-video-1.mp4',
 }
 
 export function PartyBackground({ intensity = 'full', className }) {

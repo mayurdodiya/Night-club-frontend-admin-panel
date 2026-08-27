@@ -16,13 +16,17 @@ export const BACKGROUNDS = {
 
   // Full-page backdrop behind the dashboard. party-crowd-hero is the only true HD
   // asset (1920x1080), so it is the one that stays sharp at full-page size.
-  dashboardBackdrop: '/images/party-crowd-hero.jpg',
+  // dashboardBackdrop: '/images/party-crowd-hero.jpg',
+  dashboardBackdrop: '/images/dashboard-image.jpg',
 
-  // Banner strip at the top of the dashboard.
-  dashboardHero: '/images/club-crowd-blue.jpg',
+  // dashboard top streep banner.
+  // dashboardHero: '/images/club-crowd-blue.jpg',
+  dashboardHero: '/images/dashboard-image.jpg',
+  dashboardHero: '/images/h2.jpg',
 
   // Banner strip at the top of the Social Feed page.
   socialHero: '/images/club-crowd-purple.jpg',
+  // socialHero: '/images/dashboard-image.jpg',
 }
 
 // Opacity for the two faint backdrop layers. Kept low on purpose so the photo reads

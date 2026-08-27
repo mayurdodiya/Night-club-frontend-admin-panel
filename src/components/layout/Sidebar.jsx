@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { LayoutDashboard, Users, MapPin, CalendarDays, CreditCard, MessageSquare } from 'lucide-react'
+import { LayoutDashboard, Users, MapPin, CalendarDays, CreditCard, MessageSquare, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BACKGROUNDS, BACKDROP_OPACITY, bgImage } from '@/lib/backgrounds'
+import { useAuth } from '@/context/AuthContext'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -14,6 +15,8 @@ const links = [
 ]
 
 export function Sidebar() {
+  const { admin, logout } = useAuth()
+
   return (
     <aside className="relative flex h-screen w-60 shrink-0 flex-col overflow-hidden border-r border-zinc-800">
       {/* Background photo, kept faint so navigation text stays the focus. */}
@@ -84,8 +87,23 @@ export function Sidebar() {
           ))}
         </nav>
 
-        <div className="border-t border-zinc-800/80 px-4 py-3">
-          <p className="text-[11px] text-zinc-600">Night Club Admin v0.1</p>
+        <div className="mt-auto border-t border-zinc-800/80 p-3">
+          <div className="flex items-center justify-between gap-2 rounded-xl border border-zinc-700/80 bg-black/20 px-2.5 py-2.5 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+            <div className="flex min-w-0 items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-club-gradient text-[10px] font-bold text-white shadow-glow">
+                {((admin?.name || admin?.email || 'A').charAt(0) || 'A').toUpperCase()}
+              </div>
+              <span className="truncate text-[11px] font-medium text-zinc-200">{admin?.email || 'Admin'}</span>
+            </div>
+            <button
+              type="button"
+              onClick={logout}
+              className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900/60 px-2 py-1 text-[11px] font-medium text-zinc-100 transition-colors hover:border-violet-400/60 hover:text-white"
+            >
+              <LogOut size={12} />
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     </aside>
