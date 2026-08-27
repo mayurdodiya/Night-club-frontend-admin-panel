@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CalendarDays, List, MapPin, Pencil, Plus, Grid2X2, Trash2 } from 'lucide-react'
+import { CalendarDays, Disc3, ListMusic, MapPin, Pencil, Plus, Trash2 } from 'lucide-react'
 import { DataTable } from '@/components/shared/DataTable'
 import { Pagination } from '@/components/shared/Pagination'
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog'
@@ -129,7 +129,7 @@ export default function Events() {
               onClick={() => setViewMode('grid')}
               className={`rounded-md p-2 transition-colors ${viewMode === 'grid' ? 'bg-club-gradient text-white' : 'text-zinc-400 hover:text-zinc-100'}`}
             >
-              <Grid2X2 size={16} />
+              <Disc3 size={16} />
             </button>
             <button
               type="button"
@@ -137,7 +137,7 @@ export default function Events() {
               onClick={() => setViewMode('list')}
               className={`rounded-md p-2 transition-colors ${viewMode === 'list' ? 'bg-club-gradient text-white' : 'text-zinc-400 hover:text-zinc-100'}`}
             >
-              <List size={16} />
+              <ListMusic size={16} />
             </button>
           </div>
           <Button onClick={openCreate}>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CalendarDays, Eye, Grid2X2, List, Mail, Phone, ShieldCheck, Users as UsersIcon } from 'lucide-react'
+import { CalendarDays, Disc3, Eye, ListMusic, Mail, Phone, ShieldCheck, Users as UsersIcon } from 'lucide-react'
 import { DataTable } from '@/components/shared/DataTable'
 import { Pagination } from '@/components/shared/Pagination'
 import { Avatar } from '@/components/shared/Avatar'
@@ -93,7 +93,7 @@ export default function Users() {
               onClick={() => setViewMode('grid')}
               className={`rounded-md p-2 transition-colors ${viewMode === 'grid' ? 'bg-club-gradient text-white' : 'text-zinc-400 hover:text-zinc-100'}`}
             >
-              <Grid2X2 size={16} />
+              <Disc3 size={16} />
             </button>
             <button
               type="button"
@@ -101,7 +101,7 @@ export default function Users() {
               onClick={() => setViewMode('list')}
               className={`rounded-md p-2 transition-colors ${viewMode === 'list' ? 'bg-club-gradient text-white' : 'text-zinc-400 hover:text-zinc-100'}`}
             >
-              <List size={16} />
+              <ListMusic size={16} />
             </button>
           </div>
           <div className="flex items-center gap-2 rounded-lg border border-fuchsia-500/20 bg-surface/70 px-3 py-2 text-sm text-zinc-300">
