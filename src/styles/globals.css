@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-void text-zinc-100;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  textarea:-webkit-autofill:active,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus,
+  select:-webkit-autofill:active {
+    -webkit-text-fill-color: rgb(244 244 245) !important;
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    background-color: transparent !important;
+    transition: background-color 5000s ease-in-out 0s;
+    color: rgb(244 244 245) !important;
+  }
+}
+
+@layer utilities {
+  .bg-club-gradient {
+    @apply bg-gradient-to-r from-violet-600 via-fuchsia-600 to-blue-600;
+  }
+  .text-muted {
+    @apply text-zinc-400;
+  }
+}
