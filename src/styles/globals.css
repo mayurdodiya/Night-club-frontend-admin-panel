@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-void text-zinc-100;
+  }
+}
+
+@layer utilities {
+  .bg-club-gradient {
+    @apply bg-gradient-to-r from-violet-600 via-fuchsia-600 to-blue-600;
+  }
+  .text-muted {
+    @apply text-zinc-400;
+  }
+}

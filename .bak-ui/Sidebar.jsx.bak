@@ -1,0 +1,59 @@
+import { NavLink } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { LayoutDashboard, Users, MapPin, CalendarDays, CreditCard, MessageSquare } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+const links = [
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/users', label: 'Users', icon: Users },
+  { to: '/venues', label: 'Venues', icon: MapPin },
+  { to: '/events', label: 'Events', icon: CalendarDays },
+  { to: '/subscriptions', label: 'Subscriptions', icon: CreditCard },
+  { to: '/social-feed', label: 'Social Feed', icon: MessageSquare },
+]
+
+export function Sidebar() {
+  return (
+    <aside className="flex h-screen w-60 flex-col border-r border-zinc-800 bg-surface/80 backdrop-blur-xl">
+      <div className="relative overflow-hidden border-b border-zinc-800 p-5">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: "url('/images/dj-booth-crowd.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/70 to-transparent" />
+        <motion.span
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="relative bg-club-gradient bg-clip-text text-lg font-bold tracking-wide text-transparent"
+        >
+          Night Club
+        </motion.span>
+      </div>
+      <nav className="flex-1 space-y-1 p-3">
+        {links.map(({ to, label, icon: Icon, end }, i) => (
+          <motion.div
+            key={to}
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.35, delay: i * 0.05 }}
+          >
+            <NavLink
+              to={to}
+              end={end}
+              className={({ isActive }) =>
+                cn(
+                  'group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-zinc-300 transition-all duration-300 hover:bg-elevated hover:pl-4',
+                  isActive && 'bg-club-gradient text-white shadow-glow',
+                )
+              }
+            >
+              <Icon size={18} className="transition-transform duration-300 group-hover:scale-110" />
+              {label}
+            </NavLink>
+          </motion.div>
+        ))}
+      </nav>
+    </aside>
+  )
+}

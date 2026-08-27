@@ -1,0 +1,19 @@
+import { LogOut } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
+import { Button } from '@/components/ui/button'
+
+export function Topbar() {
+  const { admin, logout } = useAuth()
+  return (
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-800 bg-surface/60 px-6 backdrop-blur">
+      <div />
+      <div className="flex items-center gap-4">
+        <span className="text-sm text-muted">{admin?.email || 'Admin'}</span>
+        <Button variant="ghost" size="sm" onClick={logout}>
+          <LogOut size={16} />
+          Logout
+        </Button>
+      </div>
+    </header>
+  )
+}
