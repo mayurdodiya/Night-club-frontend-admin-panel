@@ -289,10 +289,12 @@ export default function SocialFeed() {
                       <Avatar name={post.user?.name || 'Unknown user'} src={post.user?.avatar} size="md" />
                       <div className="min-w-0">
                         <p className="truncate font-medium text-zinc-100">{post.user?.name || 'Unknown user'}</p>
-                        <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-muted">
-                          {relativeTime(post.createdAt) ? <span>{relativeTime(post.createdAt)}</span> : null}
+                        <div className="mt-1 flex min-w-0 flex-nowrap items-center gap-1.5 text-[11px]">
+                          {relativeTime(post.createdAt) ? (
+                            <span className="shrink-0 text-muted">{relativeTime(post.createdAt)}</span>
+                          ) : null}
                           {post.venue ? (
-                            <Badge className="gap-1 bg-elevated/80 text-zinc-300">
+                            <Badge className="min-w-0 gap-1 whitespace-nowrap bg-elevated/80 text-zinc-300">
                               <MapPin size={11} /> {post.venue}
                             </Badge>
                           ) : null}

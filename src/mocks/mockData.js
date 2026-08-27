@@ -110,6 +110,21 @@ const mockComments = {
   'post-5': [
     { _id: 'c-7', user: { name: 'Karan Verma' }, description: 'Rooftop views are unreal.', createdAt: '2026-08-25T21:44:00Z' },
   ],
+  'post-6': [
+    { _id: 'c-8', user: { name: 'Aditi Shah' }, description: 'The rooftop looked incredible tonight!', createdAt: '2026-08-26T22:45:00Z' },
+    { _id: 'c-9', user: { name: 'Karan Verma' }, description: 'That DJ set was absolutely perfect.', createdAt: '2026-08-26T23:02:00Z' },
+  ],
+  'post-7': [
+    { _id: 'c-10', user: { name: 'Rohan Mehta' }, description: 'The energy in this room was unreal.', createdAt: '2026-08-27T00:05:00Z' },
+    { _id: 'c-11', user: { name: 'Aditi Shah' }, description: 'Best night out this weekend!', createdAt: '2026-08-27T00:18:00Z' },
+  ],
+  'post-8': [
+    { _id: 'c-12', user: { name: 'Priya Nair' }, description: 'Such a beautiful intimate set.', createdAt: '2026-08-27T00:50:00Z' },
+  ],
+  'post-9': [
+    { _id: 'c-13', user: { name: 'Aditi Shah' }, description: 'This looks like such a fun night!', createdAt: '2026-08-27T01:22:00Z' },
+    { _id: 'c-14', user: { name: 'Rohan Mehta' }, description: 'The atmosphere is perfect.', createdAt: '2026-08-27T01:35:00Z' },
+  ],
 }
 
 // Who liked each post. Mirrors GET /social-feed/:id/likes on the real API.
@@ -133,13 +148,32 @@ const mockLikes = {
     { _id: 'user-1', name: 'Aditi Shah' },
     { _id: 'user-3', name: 'Priya Nair' },
   ],
+  'post-6': [
+    { _id: 'user-1', name: 'Aditi Shah' },
+    { _id: 'user-3', name: 'Priya Nair' },
+    { _id: 'user-4', name: 'Karan Verma' },
+  ],
+  'post-7': [
+    { _id: 'user-1', name: 'Aditi Shah' },
+    { _id: 'user-2', name: 'Rohan Mehta' },
+    { _id: 'user-4', name: 'Karan Verma' },
+  ],
+  'post-8': [
+    { _id: 'user-2', name: 'Rohan Mehta' },
+    { _id: 'user-3', name: 'Priya Nair' },
+  ],
+  'post-9': [
+    { _id: 'user-1', name: 'Aditi Shah' },
+    { _id: 'user-2', name: 'Rohan Mehta' },
+    { _id: 'user-4', name: 'Karan Verma' },
+  ],
 }
 
 export const mockSocialFeed = [
   {
     _id: 'post-1',
-    user: { name: 'Aditi Shah' },
-    description: 'Great night out at Skyline Lounge!',
+    user: { name: 'Aditi Shah', avatar: '/images/pf1.jpg' },
+    description: 'Great night out at Skyline Lounge with amazing music, flowing cocktails, and a dance floor full of energy until late.',
     imageUrls: ['/images/p1.jpg', '/images/p6.jpg'],
     likeCount: 24,
     commentCount: 2,
@@ -148,8 +182,8 @@ export const mockSocialFeed = [
   },
   {
     _id: 'post-2',
-    user: { name: 'Rohan Mehta' },
-    description: 'Retro Night was unreal 🎶',
+    user: { name: 'Rohan Mehta', avatar: '/images/pf2.jpg' },
+    description: 'Retro Night was unreal, with throwback anthems, colorful lights, and everyone singing along to their favorite classics.',
     imageUrls: ['/images/p2.jpg', '/images/p7.jpg'],
     likeCount: 11,
     commentCount: 1,
@@ -158,8 +192,8 @@ export const mockSocialFeed = [
   },
   {
     _id: 'post-3',
-    user: { name: 'Priya Nair' },
-    description: 'Techno till sunrise at Neon Basement. The laser show was next level.',
+    user: { name: 'Priya Nair', avatar: '/images/pf3.jpg' },
+    description: 'Techno till sunrise at Neon Basement, where the laser show, deep bass, and packed dance floor created an unforgettable night.',
     imageUrls: ['/images/p3.jpg', '/images/p6.jpg'],
     likeCount: 47,
     commentCount: 3,
@@ -168,8 +202,8 @@ export const mockSocialFeed = [
   },
   {
     _id: 'post-4',
-    user: { name: 'Karan Verma' },
-    description: 'Velvet Room jazz night — a completely different mood. Highly recommend.',
+    user: { name: 'Karan Verma', avatar: '/images/pf4.jpg' },
+    description: 'Velvet Room jazz night brought a completely different mood with smooth live music, intimate seating, and beautifully crafted drinks.',
     imageUrls: ['/images/p4.jpg'],
     likeCount: 6,
     commentCount: 0,
@@ -178,8 +212,8 @@ export const mockSocialFeed = [
   },
   {
     _id: 'post-5',
-    user: { name: 'Aditi Shah' },
-    description: 'Sunset session on the rooftop before the crowd arrived.',
+    user: { name: 'Aditi Shah', avatar: '/images/pf5.jpg' },
+    description: 'Sunset session on the rooftop before the crowd arrived, with warm city views, relaxed conversations, and the perfect evening atmosphere.',
     imageUrls: ['/images/p5.jpg', '/images/p7.jpg'],
     likeCount: 33,
     commentCount: 1,
@@ -188,8 +222,8 @@ export const mockSocialFeed = [
   },
   {
     _id: 'post-6',
-    user: { name: 'Rohan Mehta' },
-    description: 'Friday lights, rooftop views, and the perfect soundtrack all night long.',
+    user: { name: 'Rohan Mehta', avatar: '/images/pf6.jpg' },
+    description: 'Friday lights, rooftop views, and the perfect soundtrack made this a memorable evening for friends enjoying the city from above.',
     imageUrls: ['/images/p8.jpg', '/images/p1.jpg'],
     likeCount: 29,
     commentCount: 4,
@@ -198,8 +232,8 @@ export const mockSocialFeed = [
   },
   {
     _id: 'post-7',
-    user: { name: 'Priya Nair' },
-    description: 'A packed dance floor and unforgettable energy at the weekend takeover.',
+    user: { name: 'Priya Nair', avatar: '/images/pf7.jpg' },
+    description: 'A packed dance floor and unforgettable energy defined the weekend takeover, with powerful beats and an incredible crowd from start to finish.',
     imageUrls: ['/images/p9.jpg', '/images/p3.jpg'],
     likeCount: 38,
     commentCount: 5,
@@ -208,13 +242,23 @@ export const mockSocialFeed = [
   },
   {
     _id: 'post-8',
-    user: { name: 'Karan Verma' },
-    description: 'Late-night moments from an intimate set at Velvet Room.',
+    user: { name: 'Karan Verma', avatar: '/images/pf8.jpg' },
+    description: 'Late-night moments from an intimate set at Velvet Room, where soulful performances and a warm atmosphere made the evening feel truly special.',
     imageUrls: ['/images/p10.jpg', '/images/p4.jpg'],
     likeCount: 18,
     commentCount: 2,
     venue: 'Velvet Room',
     createdAt: '2026-08-27T00:30:00Z',
+  },
+  {
+    _id: 'post-9',
+    user: { name: 'Meera Joshi', avatar: '/images/pf9.jpg' },
+    description: 'A vibrant night of music, friends, and city lights with every moment captured on the dance floor.',
+    imageUrls: ['/images/p6.jpg', '/images/p2.jpg'],
+    likeCount: 26,
+    commentCount: 3,
+    venue: 'Skyline Lounge',
+    createdAt: '2026-08-27T01:10:00Z',
   },
 ]
 
