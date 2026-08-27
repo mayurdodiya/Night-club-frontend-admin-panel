@@ -38,8 +38,21 @@ export default {
           '100%': { transform: 'translateY(-100vh)', opacity: '0' },
         },
         dialogShow: {
-          '0%': { opacity: '0', transform: 'scale(0.95) translateY(4px)' },
-          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+          '0%': { opacity: '0', transform: 'translate(-50%, -50%) scale(0.88)' },
+          '65%': { opacity: '1', transform: 'translate(-50%, -50%) scale(1.018)' },
+          '100%': { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
+        },
+        dialogHide: {
+          '0%': { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
+          '100%': { opacity: '0', transform: 'translate(-50%, -50%) scale(0.96)' },
+        },
+        overlayShow: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        overlayHide: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
         },
         glowPulse: {
           '0%, 100%': { opacity: '0.6' },
@@ -54,7 +67,10 @@ export default {
         'spotlight-a': 'spotlightA 6s ease-in-out infinite',
         'spotlight-b': 'spotlightB 7s ease-in-out infinite',
         'float-up': 'floatUp linear infinite',
-        'dialog-in': 'dialogShow 0.18s ease-out',
+        'dialog-in': 'dialogShow 0.46s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'dialog-out': 'dialogHide 0.28s cubic-bezier(0.4, 0, 1, 1) both',
+        'overlay-in': 'overlayShow 0.28s ease-out',
+        'overlay-out': 'overlayHide 0.2s ease-in forwards',
         'glow-pulse': 'glowPulse 2.5s ease-in-out infinite',
       },
     },

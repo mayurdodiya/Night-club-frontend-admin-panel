@@ -18,7 +18,7 @@ export function ProtectedLayout() {
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <Topbar />
-          <main className="min-h-0 flex-1 overflow-y-auto p-6">
+          <main className="scrollbar-club min-h-0 flex-1 overflow-y-auto p-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

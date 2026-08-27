@@ -33,6 +33,7 @@ export default function Events() {
   const [form, setForm] = useState(emptyForm)
   const [confirmId, setConfirmId] = useState(null)
   const [viewMode, setViewMode] = useState('grid')
+  const [selectedEvent, setSelectedEvent] = useState(null)
 
   function openCreate() {
     setEditingId(null)
@@ -161,7 +162,14 @@ export default function Events() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {rows.map((event) => (
-            <div key={event.id || event._id} className="group overflow-hidden rounded-xl border border-fuchsia-500/15 bg-surface/90 shadow-[0_12px_30px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-1 hover:border-fuchsia-400/40">
+            <div
+              key={event.id || event._id}
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedEvent(event)}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSelectedEvent(event)}
+              className="group cursor-pointer overflow-hidden rounded-xl border border-fuchsia-500/15 bg-surface/90 shadow-[0_12px_30px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-1 hover:border-fuchsia-400/40"
+            >
               {event.imageUrls?.[0] ? (
                 <img src={event.imageUrls[0]} alt={event.name} className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
               ) : <div className="h-44 bg-elevated" />}
@@ -175,8 +183,8 @@ export default function Events() {
                 <div className="flex items-center justify-between border-t border-zinc-800/80 pt-3">
                   <span className="flex items-center gap-1.5 text-xs text-zinc-500"><CalendarDays size={13} /> Night event</span>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(event)} aria-label={`Edit ${event.name}`}><Pencil size={15} /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => setConfirmId(event.id || event._id)} aria-label={`Delete ${event.name}`}><Trash2 size={15} className="text-red-400" /></Button>
+                    <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); openEdit(event) }} aria-label={`Edit ${event.name}`}><Pencil size={15} /></Button>
+                    <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setConfirmId(event.id || event._id) }} aria-label={`Delete ${event.name}`}><Trash2 size={15} className="text-red-400" /></Button>
                   </div>
                 </div>
               </div>
@@ -248,6 +256,34 @@ export default function Events() {
               <Button type="submit">{editingId ? 'Save changes' : 'Create event'}</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
+        <DialogContent className="max-w-xl border-fuchsia-500/25 bg-[linear-gradient(145deg,rgba(35,25,48,0.98),rgba(14,14,22,0.98))] p-0 shadow-[0_0_45px_rgba(168,85,247,0.25)]">
+          {selectedEvent ? (
+            <div>
+              {selectedEvent.imageUrls?.[0] ? (
+                <img src={selectedEvent.imageUrls[0]} alt={selectedEvent.name} className="h-64 w-full rounded-t-lg object-cover sm:h-72" />
+              ) : null}
+              <div className="space-y-4 p-6">
+                <DialogHeader>
+                  <div className="flex items-start justify-between gap-3 pr-5">
+                    <DialogTitle className="text-xl">{selectedEvent.name}</DialogTitle>
+                    {selectedEvent.isFeatured ? <span className="rounded-full bg-fuchsia-500/15 px-2.5 py-1 text-xs font-medium text-fuchsia-300">Featured</span> : null}
+                  </div>
+                </DialogHeader>
+                <p className="text-sm leading-relaxed text-zinc-300">{selectedEvent.description || 'No description available.'}</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="rounded-lg border border-white/5 bg-black/20 p-3 text-sm text-zinc-300"><MapPin size={14} className="mr-2 inline text-fuchsia-400" />{selectedEvent.address || 'Address not provided'}</div>
+                  <div className="rounded-lg border border-white/5 bg-black/20 p-3 text-sm text-zinc-300"><CalendarDays size={14} className="mr-2 inline text-blue-400" />Night event</div>
+                </div>
+                {selectedEvent.amenities?.length ? <div><p className="mb-2 text-xs uppercase tracking-wider text-zinc-500">Amenities</p><div className="flex flex-wrap gap-2">{selectedEvent.amenities.map((item) => <span key={item} className="rounded-full bg-elevated px-2.5 py-1 text-xs text-zinc-300">{item}</span>)}</div></div> : null}
+                {selectedEvent.offers?.length ? <div><p className="mb-2 text-xs uppercase tracking-wider text-zinc-500">Offers</p><div className="flex flex-wrap gap-2">{selectedEvent.offers.map((item) => <span key={item} className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-xs text-emerald-300">{item}</span>)}</div></div> : null}
+                <div className="text-xs text-zinc-500">Coordinates: {selectedEvent.latitude ?? '—'}, {selectedEvent.longitude ?? '—'}</div>
+              </div>
+            </div>
+          ) : null}
         </DialogContent>
       </Dialog>
 

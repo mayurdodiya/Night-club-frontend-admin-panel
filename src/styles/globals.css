@@ -38,7 +38,7 @@
 
   .scrollbar-club {
     scrollbar-width: thin;
-    scrollbar-color: rgb(168 85 247 / 0.8) rgb(24 18 32 / 0.8);
+    scrollbar-color: rgb(63 63 70 / 0.9) rgb(9 9 11 / 0.85);
   }
 
   .scrollbar-club::-webkit-scrollbar {
@@ -46,15 +46,15 @@
   }
 
   .scrollbar-club::-webkit-scrollbar-track {
-    background: rgb(24 18 32 / 0.8);
+    background: rgb(9 9 11 / 0.85);
   }
 
   .scrollbar-club::-webkit-scrollbar-thumb {
     border-radius: 999px;
-    background: linear-gradient(180deg, rgb(217 70 239), rgb(59 130 246));
+    background: rgb(63 63 70 / 0.9);
   }
 
   .scrollbar-club::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgb(232 121 249), rgb(96 165 250));
+    background: rgb(82 82 91);
   }
 }
