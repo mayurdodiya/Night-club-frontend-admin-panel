@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { CalendarDays, List, MapPin, Pencil, Plus, Grid2X2, Trash2 } from 'lucide-react'
 import { DataTable } from '@/components/shared/DataTable'
 import { Pagination } from '@/components/shared/Pagination'
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog'
@@ -32,6 +32,7 @@ export default function Events() {
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(emptyForm)
   const [confirmId, setConfirmId] = useState(null)
+  const [viewMode, setViewMode] = useState('grid')
 
   function openCreate() {
     setEditingId(null)
@@ -75,7 +76,20 @@ export default function Events() {
   }
 
   const columns = [
-    { key: 'name', header: 'Name' },
+    {
+      key: 'name',
+      header: 'Event',
+      render: (row) => (
+        <div className="flex items-center gap-3">
+          {row.imageUrls?.[0] ? (
+            <img src={row.imageUrls[0]} alt="" className="h-12 w-16 rounded-md border border-zinc-800 object-cover" loading="lazy" />
+          ) : (
+            <div className="h-12 w-16 rounded-md border border-zinc-800 bg-elevated" />
+          )}
+          <span className="font-medium text-zinc-100">{row.name}</span>
+        </div>
+      ),
+    },
     { key: 'address', header: 'Address' },
     {
       key: 'isFeatured',
@@ -102,18 +116,80 @@ export default function Events() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-100">Events</h1>
-        <Button onClick={openCreate}>
-          <Plus size={16} />
-          New Event
-        </Button>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="mb-1 text-xs font-medium uppercase tracking-[0.18em] text-fuchsia-400">Club calendar</p>
+          <h1 className="text-2xl font-bold text-zinc-100">Events</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="inline-flex rounded-lg border border-zinc-800 bg-surface p-1">
+            <button
+              type="button"
+              aria-label="Grid view"
+              onClick={() => setViewMode('grid')}
+              className={`rounded-md p-2 transition-colors ${viewMode === 'grid' ? 'bg-club-gradient text-white' : 'text-zinc-400 hover:text-zinc-100'}`}
+            >
+              <Grid2X2 size={16} />
+            </button>
+            <button
+              type="button"
+              aria-label="List view"
+              onClick={() => setViewMode('list')}
+              className={`rounded-md p-2 transition-colors ${viewMode === 'list' ? 'bg-club-gradient text-white' : 'text-zinc-400 hover:text-zinc-100'}`}
+            >
+              <List size={16} />
+            </button>
+          </div>
+          <Button onClick={openCreate}>
+            <Plus size={16} />
+            New Event
+          </Button>
+        </div>
       </div>
 
-      <div className="rounded-lg border border-zinc-800 bg-surface">
-        <DataTable columns={columns} rows={rows} loading={loading} emptyMessage="No events yet." />
-        <Pagination page={page} limit={limit} total={total} onPageChange={setPage} />
-      </div>
+      {viewMode === 'list' ? (
+        <div className="rounded-lg border border-zinc-800 bg-surface">
+          <DataTable columns={columns} rows={rows} loading={loading} emptyMessage="No events yet." />
+          <Pagination page={page} limit={limit} total={total} onPageChange={setPage} />
+        </div>
+      ) : loading ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => <div key={index} className="h-80 animate-pulse rounded-xl border border-zinc-800 bg-surface" />)}
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="rounded-lg border border-zinc-800 bg-surface p-8 text-center text-sm text-muted">No events yet.</div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {rows.map((event) => (
+            <div key={event.id || event._id} className="group overflow-hidden rounded-xl border border-fuchsia-500/15 bg-surface/90 shadow-[0_12px_30px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-1 hover:border-fuchsia-400/40">
+              {event.imageUrls?.[0] ? (
+                <img src={event.imageUrls[0]} alt={event.name} className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+              ) : <div className="h-44 bg-elevated" />}
+              <div className="space-y-3 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="font-semibold text-zinc-100">{event.name}</h2>
+                  {event.isFeatured ? <span className="rounded-full bg-fuchsia-500/15 px-2 py-1 text-[10px] font-medium text-fuchsia-300">Featured</span> : null}
+                </div>
+                <p className="line-clamp-2 min-h-10 text-sm leading-relaxed text-muted">{event.description}</p>
+                <p className="flex items-center gap-1.5 text-xs text-zinc-400"><MapPin size={13} className="text-fuchsia-400" />{event.address}</p>
+                <div className="flex items-center justify-between border-t border-zinc-800/80 pt-3">
+                  <span className="flex items-center gap-1.5 text-xs text-zinc-500"><CalendarDays size={13} /> Night event</span>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="icon" onClick={() => openEdit(event)} aria-label={`Edit ${event.name}`}><Pencil size={15} /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => setConfirmId(event.id || event._id)} aria-label={`Delete ${event.name}`}><Trash2 size={15} className="text-red-400" /></Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {viewMode === 'grid' ? (
+        <div className="mt-4 rounded-lg border border-zinc-800 bg-surface/70">
+          <Pagination page={page} limit={limit} total={total} onPageChange={setPage} />
+        </div>
+      ) : null}
 
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
         <DialogContent>
