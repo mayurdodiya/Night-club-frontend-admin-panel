@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { MapPin, CalendarDays, Users as UsersIcon, CreditCard, TrendingUp, Activity } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { AreaChart, BarChart, DonutChart, Sparkline } from '@/components/shared/Charts'
+import { AreaChart, BarChart, DonutChart, RadarChart, MiniLineChart, Sparkline } from '@/components/shared/Charts'
 import { useCountUp } from '@/hooks/useCountUp'
 import { cn } from '@/lib/utils'
 import { BACKGROUNDS, BACKDROP_OPACITY, bgImage } from '@/lib/backgrounds'
@@ -253,22 +253,96 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.28 }}
-          className="mt-4"
-        >
-          <Card className="bg-surface/70 backdrop-blur-sm hover:translate-y-0">
-            <CardHeader>
-              <CardTitle>Records by type</CardTitle>
-              <p className="mt-0.5 text-xs text-muted">Current totals across the platform</p>
-            </CardHeader>
-            <CardContent>
-              {loading ? <Skeleton className="h-[190px] w-full" /> : <BarChart data={distribution} />}
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.28 }}
+          >
+            <Card className="bg-surface/70 backdrop-blur-sm hover:translate-y-0">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Records by type</CardTitle>
+                  <p className="mt-0.5 text-xs text-muted">Current totals across the platform</p>
+                </div>
+                <span className="text-xs text-muted">{RANGES.find((r) => r.key === range)?.label}</span>
+              </CardHeader>
+              <CardContent>
+                {loading ? <Skeleton className="h-[190px] w-full" /> : <BarChart data={distribution} />}
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.32 }}
+          >
+            <Card className="bg-surface/70 backdrop-blur-sm hover:translate-y-0">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Expense mix</CardTitle>
+                  <p className="mt-0.5 text-xs text-muted">Operational breakdown</p>
+                </div>
+              </CardHeader>
+              <CardContent className="flex items-center justify-center py-3">
+                {loading ? <Skeleton className="h-[170px] w-full" /> : (
+                  <RadarChart
+                    data={[
+                      { label: 'Food', value: 64 },
+                      { label: 'Transport', value: 42 },
+                      { label: 'Music', value: 79 },
+                      { label: 'Staff', value: 58 },
+                      { label: 'Ops', value: 61 },
+                      { label: 'Marketing', value: 46 },
+                    ]}
+                    size={220}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1fr]">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.36 }}
+          >
+            <Card className="bg-surface/70 backdrop-blur-sm hover:translate-y-0">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Income Dynamics</CardTitle>
+                  <p className="mt-0.5 text-xs text-muted">Monthly performance</p>
+                </div>
+                <span className="text-xs text-emerald-400">+$8,405</span>
+              </CardHeader>
+              <CardContent>
+                <MiniLineChart data={[2.3, 2.8, 2.6, 3.4, 3.1, 4.8, 4.2, 5.4]} accent="#38bdf8" height={110} />
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+          >
+            <Card className="bg-surface/70 backdrop-blur-sm hover:translate-y-0">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Expenses Dynamics</CardTitle>
+                  <p className="mt-0.5 text-xs text-muted">Monthly spending</p>
+                </div>
+                <span className="text-xs text-pink-400">$8,222</span>
+              </CardHeader>
+              <CardContent>
+                <MiniLineChart data={[3.4, 4.1, 3.6, 4.7, 3.9, 5.8, 5.2, 6.4]} accent="#d946ef" height={110} />
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
       </div>
     </div>
   )
