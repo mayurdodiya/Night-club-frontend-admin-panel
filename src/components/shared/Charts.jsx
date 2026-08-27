@@ -265,14 +265,15 @@ export function RadarChart({ data = [], size = 220, className }) {
 
   const cx = size / 2
   const cy = size / 2
-  const radius = size * 0.32
-  const levels = 4
+  const radius = size * 0.34
+  const levels = 5
   const axes = data.length
+  const maxValue = Math.max(...data.map((item) => item.value), 100)
 
   const polygonPoints = data
-    .map((d, i) => {
-      const angle = (Math.PI * 2 * i) / axes - Math.PI / 2
-      const valueRadius = (d.value / Math.max(...data.map((p) => p.value))) * radius
+    .map((item, index) => {
+      const angle = (Math.PI * 2 * index) / axes - Math.PI / 2
+      const valueRadius = (item.value / maxValue) * radius
       const x = cx + Math.cos(angle) * valueRadius
       const y = cy + Math.sin(angle) * valueRadius
       return `${x},${y}`
@@ -283,48 +284,51 @@ export function RadarChart({ data = [], size = 220, className }) {
     <div className={cn('relative', className)} style={{ width: size, height: size }}>
       <svg viewBox={`0 0 ${size} ${size}`} className="h-full w-full" role="img" aria-label="Radar chart">
         <defs>
-          <linearGradient id="radar-fill" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="#a855f7" stopOpacity="0.7" />
-            <stop offset="55%" stopColor="#8b5cf6" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.2" />
+          <linearGradient id="radar-fill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#a855f7" stopOpacity="0.72" />
+            <stop offset="55%" stopColor="#d946ef" stopOpacity="0.52" />
+            <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.18" />
           </linearGradient>
         </defs>
 
         {Array.from({ length: levels }).map((_, idx) => {
           const levelRadius = (radius / levels) * (idx + 1)
           const points = data
-            .map((_, i) => {
-              const angle = (Math.PI * 2 * i) / axes - Math.PI / 2
+            .map((_, axisIndex) => {
+              const angle = (Math.PI * 2 * axisIndex) / axes - Math.PI / 2
               const x = cx + Math.cos(angle) * levelRadius
               const y = cy + Math.sin(angle) * levelRadius
               return `${x},${y}`
             })
             .join(' ')
-          return <polygon key={idx} points={points} fill="none" stroke="#44404d" strokeWidth="1" />
+          return <polygon key={idx} points={points} fill="none" stroke="#4b4752" strokeWidth="1" opacity="0.9" />
         })}
 
-        {data.map((d, i) => {
-          const angle = (Math.PI * 2 * i) / axes - Math.PI / 2
-          const x = cx + Math.cos(angle) * radius
-          const y = cy + Math.sin(angle) * radius
+        {data.map((item, index) => {
+          const angle = (Math.PI * 2 * index) / axes - Math.PI / 2
+          const endX = cx + Math.cos(angle) * radius
+          const endY = cy + Math.sin(angle) * radius
+          const labelR = radius + 18
+          const labelX = cx + Math.cos(angle) * labelR
+          const labelY = cy + Math.sin(angle) * labelR
           return (
-            <g key={d.label}>
-              <line x1={cx} y1={cy} x2={x} y2={y} stroke="#3f3f46" />
-              <text x={cx + Math.cos(angle) * (radius + 18)} y={cy + Math.sin(angle) * (radius + 18)} textAnchor="middle" fontSize="10" fill="#d4d4d8" >{d.label}</text>
+            <g key={item.label}>
+              <line x1={cx} y1={cy} x2={endX} y2={endY} stroke="#3f3f46" strokeWidth="1" />
+              <text x={labelX} y={labelY} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="#e4e4e7">{item.label}</text>
             </g>
           )
         })}
 
-        <polygon points={polygonPoints} fill="url(#radar-fill)" stroke="#c084fc" strokeWidth="2" filter="drop-shadow(0 0 10px rgba(168, 85, 247, 0.55))" />
+        <polygon points={polygonPoints} fill="url(#radar-fill)" stroke="#e879f9" strokeWidth="2" filter="drop-shadow(0 0 12px rgba(216, 70, 239, 0.7))" />
       </svg>
     </div>
   )
 }
 
-export function MiniLineChart({ data = [], height = 110, className, accent = '#d946ef' }) {
+export function MiniLineChart({ data = [], height = 110, className, accent = '#d946ef', labels = [] }) {
   if (!data.length) return <ChartEmpty height={height} />
 
-  const W = 280
+  const W = 300
   const H = height
   const max = Math.max(...data)
   const min = Math.min(...data)
@@ -333,7 +337,7 @@ export function MiniLineChart({ data = [], height = 110, className, accent = '#d
   const line = data
     .map((value, index) => {
       const x = (index / (data.length - 1)) * W
-      const y = H - ((value - min) / span) * (H - 10) - 5
+      const y = H - ((value - min) / span) * (H - 16) - 8
       return `${index === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`
     })
     .join(' ')
@@ -345,12 +349,32 @@ export function MiniLineChart({ data = [], height = 110, className, accent = '#d
       <svg viewBox={`0 0 ${W} ${H}`} className="h-full w-full" preserveAspectRatio="none" role="img" aria-label="Mini trend chart">
         <defs>
           <linearGradient id={`mini-area-${accent.replace('#', '')}`} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor={accent} stopOpacity="0.45" />
-            <stop offset="100%" stopColor={accent} stopOpacity="0.05" />
+            <stop offset="0%" stopColor={accent} stopOpacity="0.65" />
+            <stop offset="100%" stopColor={accent} stopOpacity="0.08" />
+          </linearGradient>
+          <linearGradient id={`mini-line-${accent.replace('#', '')}`} x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stopColor={accent} />
+            <stop offset="50%" stopColor="#60a5fa" />
+            <stop offset="100%" stopColor="#6ee7f9" />
           </linearGradient>
         </defs>
+
+        {[0, 0.5, 1].map((p) => {
+          const y = H - p * (H - 16) - 8
+          return <line key={p} x1="0" y1={y} x2={W} y2={y} stroke="#3f3f46" strokeDasharray="5 6" opacity="0.8" />
+        })}
+
         <path d={area} fill={`url(#mini-area-${accent.replace('#', '')})`} />
-        <path d={line} fill="none" stroke={accent} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" filter="drop-shadow(0 0 8px rgba(217, 70, 239, 0.6))" />
+        <path d={line} fill="none" stroke={`url(#mini-line-${accent.replace('#', '')})`} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" filter="drop-shadow(0 0 12px rgba(59,130,246,0.75))" />
+
+        {labels.length > 0 && labels.map((label, index) => {
+          const x = (index / (labels.length - 1)) * W
+          return (
+            <text key={label + index} x={x} y={H - 2} textAnchor="middle" fontSize="7" fill="#a1a1aa">
+              {label}
+            </text>
+          )
+        })}
       </svg>
     </div>
   )

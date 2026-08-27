@@ -25,8 +25,9 @@ export const BACKGROUNDS = {
   dashboardHero: '/images/h3.jpg',
 
   // Banner strip at the top of the Social Feed page.
-  socialHero: '/images/club-crowd-purple.jpg',
+  // socialHero: '/images/club-crowd-purple.jpg',
   // socialHero: '/images/dashboard-image.jpg',
+  socialHero: '/images/h5.jpg',
 }
 
 // Opacity for the two faint backdrop layers. Kept low on purpose so the photo reads

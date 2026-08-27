@@ -319,7 +319,12 @@ export default function Dashboard() {
                 <span className="text-xs text-emerald-400">+$8,405</span>
               </CardHeader>
               <CardContent>
-                <MiniLineChart data={[2.3, 2.8, 2.6, 3.4, 3.1, 4.8, 4.2, 5.4]} accent="#38bdf8" height={110} />
+                <MiniLineChart
+                  data={[2.3, 2.8, 2.6, 3.4, 3.1, 4.8, 4.2, 5.4]}
+                  accent="#38bdf8"
+                  labels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']}
+                  height={110}
+                />
               </CardContent>
             </Card>
           </motion.div>
@@ -338,7 +343,12 @@ export default function Dashboard() {
                 <span className="text-xs text-pink-400">$8,222</span>
               </CardHeader>
               <CardContent>
-                <MiniLineChart data={[3.4, 4.1, 3.6, 4.7, 3.9, 5.8, 5.2, 6.4]} accent="#d946ef" height={110} />
+                <MiniLineChart
+                  data={[3.4, 4.1, 3.6, 4.7, 3.9, 5.8, 5.2, 6.4]}
+                  accent="#d946ef"
+                  labels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']}
+                  height={110}
+                />
               </CardContent>
             </Card>
           </motion.div>
